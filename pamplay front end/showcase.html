@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PalmPlay - Cinematic Discovery</title>
+    <style>
+        :root {
+            --primary: #FF0000;
+            --font-main: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background: #000;
+            color: #fff;
+            font-family: var(--font-main);
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        /* Atmospheric Mesh Gradient Background */
+        .ambient-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: #000;
+            overflow: hidden;
+        }
+
+        .gradient-orb {
+            position: absolute;
+            width: 100vw;
+            height: 100vw;
+            background: radial-gradient(circle, rgba(255, 0, 0, 0.08) 0%, transparent 70%);
+            border-radius: 50%;
+            filter: blur(80px);
+            transition: transform 1.5s cubic-bezier(0.19, 1, 0.22, 1);
+            pointer-events: none;
+        }
+
+        /* Top-Left Brand Title with Shimmer */
+        .brand-title {
+            position: fixed;
+            top: 40px;
+            left: 40px;
+            z-index: 100;
+            font-size: 32px;
+            font-weight: 700;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.6);
+            mix-blend-mode: difference;
+            overflow: hidden;
+        }
+
+        .brand-title::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            animation: shimmer 8s infinite cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes shimmer {
+            0% {
+                left: -100%;
+            }
+
+            20% {
+                left: 200%;
+            }
+
+            100% {
+                left: 200%;
+            }
+        }
+
+        /* Left-Center Visual Stage */
+        .visual-stage {
+            position: fixed;
+            top: 50%;
+            left: 5%;
+            transform: translateY(-50%);
+            width: 40vw;
+            height: 60vh;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .frame-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .frame-container img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center 30%;
+            filter: contrast(1.2) brightness(1.1) saturate(1.1);
+            opacity: 0;
+            transform: scale(0.95);
+            transition: opacity 0.4s ease, transform 0.4s ease;
+        }
+
+        .frame-container img.active {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* Right-Side Narrative Panel */
+        .narrative-container {
+            position: fixed;
+            top: 0;
+            left: 50%;
+            width: 45vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 0 60px;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .narrative-stage {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%) translateX(20px);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s ease, visibility 0.5s, transform 0.5s ease;
+            max-width: 500px;
+        }
+
+        .narrative-stage.active {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+            transform: translateY(-50%) translateX(0);
+        }
+
+        .narrative-stage h2 {
+            font-size: 64px;
+            line-height: 1.1;
+            font-weight: 300;
+            margin-bottom: 30px;
+            letter-spacing: -2px;
+        }
+
+        .narrative-stage p {
+            font-size: 18px;
+            line-height: 1.8;
+            color: rgba(255, 255, 255, 0.5);
+            max-width: 400px;
+        }
+
+        /* Character animation containers */
+        .char {
+            display: inline-block;
+            transform: translateY(20px);
+            opacity: 0;
+            transition: transform 0.6s cubic-bezier(0.19, 1, 0.22, 1), opacity 0.6s;
+        }
+
+        .active .char {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        [data-animate="true"] {
+            min-height: 1.2em;
+        }
+
+        /* Explore Button */
+        .explore-wrap {
+            position: fixed;
+            bottom: 10vh;
+            right: 100px;
+            z-index: 10;
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+
+        .explore-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px 40px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #fff;
+            text-decoration: none;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            font-size: 12px;
+            transition: all 0.4s;
+            background: rgba(255, 255, 0, 0);
+        }
+
+        .explore-btn .arrow {
+            transition: transform 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+
+        .explore-btn:hover {
+            background: #fff;
+            color: #000;
+            letter-spacing: 6px;
+        }
+
+        .explore-btn:hover .arrow {
+            transform: translateX(8px);
+        }
+
+        /* Loader */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            transition: opacity 1.5s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+
+        .loader-bar {
+            width: 60px;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            position: relative;
+        }
+
+        #progress-fill {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 0%;
+            background: #fff;
+            transition: width 0.3s ease;
+        }
+
+        /* Bottom dots */
+        .slide-dots {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 14px;
+            z-index: 100;
+        }
+
+        .slide-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.15);
+            border: none;
+            padding: 0;
+            cursor: pointer;
+            transition: all 0.4s ease;
+        }
+
+        .slide-dot.active {
+            background: var(--primary);
+            box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+            transform: scale(1.4);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="ambient-bg">
+        <div class="gradient-orb" id="orb-1"></div>
+        <div class="gradient-orb" id="orb-2"
+            style="background: radial-gradient(circle, rgba(255, 0, 0, 0.04) 0%, transparent 70%);"></div>
+    </div>
+
+    <div class="loading-screen" id="loading-screen">
+        <div class="loader-bar">
+            <div id="progress-fill"></div>
+        </div>
+    </div>
+
+    <div class="brand-title">PALMPLAY</div>
+
+    <div class="visual-stage">
+        <div class="frame-container" id="frame-container"></div>
+    </div>
+
+    <div class="narrative-container">
+        <div class="narrative-stage active" id="stage-0">
+            <h2 data-animate="true">Music in Your Hands.</h2>
+            <p>Experience total immersion as your gestures bridge the gap between imagination and sound.</p>
+        </div>
+        <div class="narrative-stage" id="stage-1">
+            <h2 data-animate="true">Play From Your Tips.</h2>
+            <p>Unleash the symphony within. Your touch defines the rhythm, your movement creates the soul.</p>
+        </div>
+        <div class="narrative-stage" id="stage-2">
+            <h2 data-animate="true">Hear As u Wish.</h2>
+            <p>The ultimate freedom of audio. A personalized soundscape that evolves with your every intent.</p>
+        </div>
+    </div>
+
+    <div class="slide-dots" id="slide-dots">
+        <button class="slide-dot active" data-index="0"></button>
+        <button class="slide-dot" data-index="1"></button>
+        <button class="slide-dot" data-index="2"></button>
+    </div>
+
+    <div class="explore-wrap">
+        <a href="index.html" class="explore-btn">
+            Begin Journey
+            <svg class="arrow" width="20" height="10" viewBox="0 0 20 10" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <path d="M15 1L19 5L15 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                    stroke-linejoin="round" />
+                <path d="M1 5H19" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+            </svg>
+        </a>
+    </div>
+
+    <script>
+        // The 3 key frames: hand, play button, music note
+        const keyFramePaths = [
+            'assets/gallery/p1.png',
+            'assets/gallery/p2.png',
+            'assets/gallery/p3.png'
+        ];
+        const DELAY = 2000; // 2 second hold on each frame
+        let current = 0;
+        let timer = null;
+
+        const container = document.getElementById('frame-container');
+        const stages = document.querySelectorAll('.narrative-stage');
+        const dots = document.querySelectorAll('.slide-dot');
+        const frameImages = [];
+        let loaded = 0;
+
+        // Orb positions per slide
+        const orbPos = [
+            { x1: -20, y1: -20, x2: 50, y2: 40 },
+            { x1: 10, y1: -5, x2: 30, y2: 60 },
+            { x1: 20, y1: 10, x2: 20, y2: 80 }
+        ];
+
+        // Character Reveal
+        document.querySelectorAll('[data-animate="true"]').forEach(el => {
+            const words = el.textContent.split(/\s+/);
+            el.innerHTML = words.map(word => {
+                const chars = word.split('').map(c => `<span class="char">${c}</span>`).join('');
+                return `<span style="white-space:nowrap">${chars}</span>`;
+            }).join('&nbsp;');
+            el.querySelectorAll('.char').forEach((c, i) => {
+                c.style.transitionDelay = `${i * 25}ms`;
+            });
+        });
+
+        // Load the 3 images
+        keyFramePaths.forEach((path, i) => {
+            const img = document.createElement('img');
+            img.src = path;
+            img.alt = `Scene ${i + 1}`;
+            if (i === 0) img.classList.add('active');
+            img.onload = () => {
+                loaded++;
+                document.getElementById('progress-fill').style.width = (loaded / 3) * 100 + '%';
+                if (loaded === 3) startShowcase();
+            };
+            img.onerror = () => { loaded++; if (loaded === 3) startShowcase(); };
+            container.appendChild(img);
+            frameImages.push(img);
+        });
+
+        function startShowcase() {
+            const loading = document.getElementById('loading-screen');
+            loading.style.opacity = '0';
+            setTimeout(() => loading.style.display = 'none', 1500);
+
+            // Start cycling
+            timer = setInterval(nextSlide, DELAY);
+        }
+
+        function goTo(index) {
+            current = index;
+
+            // Swap active image (quick transition via CSS)
+            frameImages.forEach((img, i) => img.classList.toggle('active', i === index));
+
+            // Swap narrative text
+            stages.forEach((s, i) => {
+                if (i === index) s.classList.add('active');
+                else s.classList.remove('active');
+            });
+
+            // Swap dots
+            dots.forEach((d, i) => d.classList.toggle('active', i === index));
+
+            // Move orbs
+            const p = orbPos[index];
+            document.getElementById('orb-1').style.transform = `translate(${p.x1}%, ${p.y1}%)`;
+            document.getElementById('orb-2').style.transform = `translate(${p.x2}%, ${p.y2}%)`;
+        }
+
+        function nextSlide() {
+            goTo((current + 1) % 3);
+        }
+
+        // Dot clicks
+        dots.forEach(d => d.addEventListener('click', () => {
+            goTo(parseInt(d.dataset.index));
+            clearInterval(timer);
+            timer = setInterval(nextSlide, DELAY);
+        }));
+    </script>
+</body>
+
+</html>

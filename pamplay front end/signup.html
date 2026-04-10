@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PalmPlay - Sign Up</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #FF0000;
+            --primary-glow: rgba(255, 0, 0, 0.4);
+            --bg-base: #000000;
+            --bg-elevated: #121212;
+            --text-base: #FFFFFF;
+            --text-subdued: #B3B3B3;
+        }
+
+        body {
+            background-color: var(--bg-base);
+            color: var(--text-base);
+            font-family: 'Outfit', sans-serif;
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(circle at center, #1a0000 0%, #000000 100%);
+            padding: 40px 20px;
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 450px;
+            background: rgba(18, 18, 18, 0.8);
+            border-radius: 12px;
+            padding: 50px;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+            animation: fadeIn 0.8s cubic-bezier(0.3, 0, 0.4, 1);
+        }
+
+        .logo {
+            font-size: 40px;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 30px;
+            letter-spacing: -2px;
+        }
+
+        .login-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .login-subtitle {
+            color: var(--text-subdued);
+            margin-bottom: 32px;
+            font-size: 15px;
+        }
+
+        .input-group {
+            text-align: left;
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-base);
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 14px;
+            border-radius: 4px;
+            background: #2a2a2a;
+            border: 1px solid transparent;
+            color: white;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: #333;
+            box-shadow: 0 0 10px var(--primary-glow);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 16px;
+            border-radius: 500px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+            margin-bottom: 20px;
+        }
+
+        .login-btn:hover {
+            transform: scale(1.02);
+            filter: brightness(1.1);
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            margin: 24px 0;
+            color: var(--text-subdued);
+            font-size: 12px;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid #333;
+        }
+
+        .divider:not(:empty)::before {
+            margin-right: 12px;
+        }
+
+        .divider:not(:empty)::after {
+            margin-left: 12px;
+        }
+
+        .social-login {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .social-btn {
+            flex: 1;
+            padding: 12px;
+            border-radius: 4px;
+            background: #2a2a2a;
+            border: 1px solid #444;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 20px;
+        }
+
+        .social-btn:hover {
+            background: #333;
+            border-color: #666;
+        }
+
+        .footer-links {
+            margin-top: 32px;
+            font-size: 14px;
+            color: var(--text-subdued);
+        }
+
+        .footer-links a {
+            color: var(--text-base);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .footer-links a:hover {
+            text-decoration: underline;
+        }
+
+        .back-link {
+            position: absolute;
+            top: 40px;
+            left: 40px;
+            color: var(--text-subdued);
+            text-decoration: none;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .back-link:hover {
+            color: white;
+        }
+
+        @keyframes modalIn {
+            from {
+                transform: scale(0.95) translateY(10px);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1) translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* Toast Styles */
+        #toast-container {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            pointer-events: none;
+        }
+
+        .toast {
+            background: rgba(30, 30, 30, 0.95);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 500px;
+            font-weight: 600;
+            font-size: 14px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(12px);
+            animation: toastIn 0.4s cubic-bezier(0.3, 0, 0.4, 1), toastOut 0.4s cubic-bezier(0.3, 0, 0.4, 1) 3s forwards;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            pointer-events: auto;
+        }
+
+        @keyframes toastIn {
+            from {
+                transform: translateY(30px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes toastOut {
+            from {
+                transform: translateY(0);
+                opacity: 1;
+            }
+
+            to {
+                transform: translateY(-30px);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <a href="index.html" class="back-link"><i class="fas fa-chevron-left"></i> Home</a>
+
+    <div class="login-container">
+        <div class="logo">PalmPlay</div>
+        <h2 class="login-title">Sign up for free</h2>
+        <p class="login-subtitle">Join the evolution of local music.</p>
+
+        <form id="signup-form">
+            <div class="input-group">
+                <label>What's your email?</label>
+                <input type="email" id="signup-email" placeholder="Enter your email" required>
+            </div>
+            <div class="input-group">
+                <label>Create a password</label>
+                <input type="password" id="signup-pass" placeholder="Create a password" required>
+            </div>
+            <div class="input-group">
+                <label>What should we call you?</label>
+                <input type="text" id="signup-name" placeholder="Enter a profile name" required>
+            </div>
+            <div class="input-group">
+                <label>Date of birth</label>
+                <div style="display: flex; gap: 10px;">
+                    <input type="number" placeholder="DD" style="width: 30%;" required>
+                    <input type="text" placeholder="Month" style="width: 40%;" required>
+                    <input type="number" placeholder="YYYY" style="width: 30%;" required>
+                </div>
+            </div>
+            <button type="submit" class="login-btn">Sign Up</button>
+        </form>
+
+        <div id="toast-container"></div>
+
+        <script>
+            function showToast(message) {
+                const container = document.getElementById('toast-container');
+                while (container.children.length >= 3) {
+                    container.children[0].remove();
+                }
+                const toast = document.createElement('div');
+                toast.className = 'toast';
+                toast.innerHTML = `<i class="fas fa-info-circle" style="color:var(--primary)"></i> ${message}`;
+                container.appendChild(toast);
+                setTimeout(() => {
+                    toast.classList.add('fade-out');
+                    setTimeout(() => {
+                        if (toast.parentElement) toast.remove();
+                    }, 2000);
+                }, 2500);
+            }
+
+            document.getElementById('signup-form').onsubmit = (e) => {
+                e.preventDefault();
+                const profileName = document.getElementById('signup-name').value;
+                const email = document.getElementById('signup-email').value;
+                const password = document.getElementById('signup-pass').value;
+
+                // Get existing users or start fresh
+                const users = JSON.parse(localStorage.getItem('palmplay_registered_users') || '[]');
+
+                // Check if user already exists
+                if (users.find(u => u.email === email)) {
+                    showToast('An account with this email already exists. Please log in.');
+                    setTimeout(() => window.location.href = 'login.html', 2000);
+                    return;
+                }
+
+                // Add new user
+                const newUser = { name: profileName, email: email, password: password };
+                users.push(newUser);
+                localStorage.setItem('palmplay_registered_users', JSON.stringify(users));
+
+                // Set current session
+                const sessionUser = { name: profileName, email: email, isLoggedIn: true };
+                localStorage.setItem('palmplay_user', JSON.stringify(sessionUser));
+
+                // Track in account list for switching
+                const accounts = JSON.parse(localStorage.getItem('palmplay_accounts') || '[]');
+                if (!accounts.find(a => a.email === email)) {
+                    accounts.push(sessionUser);
+                    localStorage.setItem('palmplay_accounts', JSON.stringify(accounts));
+                }
+
+                showToast(`Welcome to PalmPlay, ${profileName}! Redirecting...`);
+                setTimeout(() => window.location.href = 'index.html', 1500);
+            };
+        </script>
+
+
+        <div class="footer-links">
+            Already have an account? <a href="login.html">Log in</a>
+        </div>
+    </div>
+</body>
+
+</html>

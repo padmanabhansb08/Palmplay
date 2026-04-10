@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PalmPlay Premium - Upgrade Your Sound</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #FF0000;
+            --primary-glow: rgba(255, 0, 0, 0.4);
+            --bg-base: #000000;
+            --bg-elevated: #121212;
+            --text-base: #FFFFFF;
+            --text-subdued: #B3B3B3;
+        }
+
+        body {
+            background-color: var(--bg-base);
+            color: var(--text-base);
+            font-family: 'Outfit', sans-serif;
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        .premium-hero {
+            height: 80vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            background: radial-gradient(circle at 50% 50%, #200000 0%, #000000 70%);
+            padding: 0 20px;
+        }
+
+        .hero-title {
+            font-size: 72px;
+            font-weight: 800;
+            margin-bottom: 24px;
+            background: linear-gradient(180deg, #fff 0%, #888 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: fadeInDown 1s ease forwards;
+        }
+
+        .hero-subtitle {
+            font-size: 24px;
+            color: var(--text-subdued);
+            max-width: 600px;
+            margin-bottom: 40px;
+            opacity: 0;
+            animation: fadeIn 1s ease 0.3s forwards;
+        }
+
+        .cta-group {
+            display: flex;
+            gap: 16px;
+            opacity: 0;
+            animation: fadeInUp 1s ease 0.5s forwards;
+        }
+
+        .btn-premium {
+            padding: 18px 36px;
+            border-radius: 500px;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.3, 0, 0.4, 1);
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            box-shadow: 0 0 20px var(--primary-glow);
+        }
+
+        .btn-primary:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 35px var(--primary-glow);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            color: white;
+            border: 2px solid #555;
+        }
+
+        .btn-outline:hover {
+            border-color: white;
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .plans-section {
+            padding: 100px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .plans-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 32px;
+        }
+
+        .plan-card {
+            background: var(--bg-elevated);
+            border-radius: 12px;
+            padding: 40px;
+            border: 1px solid #282828;
+            transition: all 0.4s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .plan-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-10px);
+            background: #1a1a1a;
+        }
+
+        .plan-tag {
+            background: #222;
+            color: var(--primary);
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 700;
+            width: fit-content;
+            margin-bottom: 16px;
+        }
+
+        .plan-name {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .plan-price {
+            font-size: 18px;
+            color: var(--text-base);
+            margin-bottom: 24px;
+        }
+
+        .plan-features {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 40px 0;
+            flex-grow: 1;
+        }
+
+        .plan-features li {
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--text-subdued);
+        }
+
+        .plan-features li i {
+            color: var(--primary);
+            font-size: 14px;
+        }
+
+        .home-link {
+            position: absolute;
+            top: 40px;
+            left: 40px;
+            color: var(--text-base);
+            text-decoration: none;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            z-index: 100;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <a href="index.html" class="home-link"><i class="fas fa-chevron-left"></i> Back to <span
+            style="color: var(--primary); margin-left: 4px;">PalmPlay</span></a>
+
+    <header class="premium-hero">
+        <h1 class="hero-title">Experience Sound<br>Unfiltered.</h1>
+        <p class="hero-subtitle">High-fidelity local music management with cinematic motion and professional tools.</p>
+        <div class="cta-group">
+            <a href="#" class="btn-premium btn-primary">Get Premium</a>
+            <a href="#" class="btn-premium btn-outline">View Plans</a>
+        </div>
+    </header>
+
+    <section class="plans-section">
+        <div class="section-header">
+            <h2>Pick your power up.</h2>
+        </div>
+
+        <div class="plans-grid">
+            <div class="plan-card">
+                <span class="plan-tag">BASIC</span>
+                <h3 class="plan-name">Free</h3>
+                <p class="plan-price">Free forever</p>
+                <ul class="plan-features">
+                    <li><i class="fas fa-check"></i> Standard audio playback</li>
+                    <li><i class="fas fa-check"></i> Folder-to-playlist conversion</li>
+                    <li><i class="fas fa-check"></i> Basic search</li>
+                </ul>
+                <a href="index.html" class="btn-premium btn-outline">Current Plan</a>
+            </div>
+
+            <div class="plan-card" style="border-color: var(--primary); border-width: 2px;">
+                <span class="plan-tag" style="background: var(--primary); color: white;">POPULAR</span>
+                <h3 class="plan-name">Individual</h3>
+                <p class="plan-price">₹119 / month</p>
+                <ul class="plan-features">
+                    <li><i class="fas fa-check"></i> Hi-Res audio engine</li>
+                    <li><i class="fas fa-check"></i> Hand gesture control basics</li>
+                    <li><i class="fas fa-check"></i> Personalized UI themes</li>
+                    <li><i class="fas fa-check"></i> Advanced metadata editing</li>
+                </ul>
+                <button class="btn-premium btn-primary"
+                    onclick="alert('Welcome to PalmPlay Premium!'); window.location.href='index.html';">Join
+                    Premium</button>
+            </div>
+
+            <div class="plan-card">
+                <span class="plan-tag">CREATIVE</span>
+                <h3 class="plan-name">Pro</h3>
+                <p class="plan-price">₹299 / month</p>
+                <ul class="plan-features">
+                    <li><i class="fas fa-check"></i> All Individual features</li>
+                    <li><i class="fas fa-check"></i> Real-time audio visualizers</li>
+                    <li><i class="fas fa-check"></i> Advanced AI library sorting</li>
+                    <li><i class="fas fa-check"></i> Cloud backup (coming soon)</li>
+                </ul>
+                <button class="btn-premium btn-primary"
+                    onclick="alert('Welcome to PalmPlay Pro!'); window.location.href='index.html';">Get Started</button>
+            </div>
+        </div>
+    </section>
+</body>
+
+</html>
